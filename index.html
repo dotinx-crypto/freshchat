@@ -28,7 +28,7 @@
         z-index: 9999;
         flex-direction: column;
       }
-      
+
       .loader {
         border: 5px solid #f3f3f3;
         border-top: 5px solid #3498db;
@@ -38,12 +38,16 @@
         animation: spin 2s linear infinite;
         margin-bottom: 20px;
       }
-      
+
       @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
       }
-      
+
       .loader-text {
         font-size: 18px;
         color: #333;
@@ -57,32 +61,30 @@
         align-items: center;
         min-height: 100vh;
         width: 100%;
-        background: linear-gradient(to bottom, #BFDBFE, #FFFFFF);
-        background-attachment: fixed;
       }
 
       #content img {
         margin: 1px auto;
-        margin: 3rem 0rem 2rem 0rem;
-        width: 150px;
+        margin: 5rem 0rem 4rem 0rem;
+        width: 120px;
       }
 
       #content h1 {
         font-size: 18px;
-        margin-bottom: .5rem;
+        margin-bottom: 0.5rem;
       }
 
       #content p {
         font-size: 12px;
       }
     </style>
-    
+
     <div id="page-loader">
       <div class="loader"></div>
       <div class="loader-text">Loading chat...</div>
     </div>
-    
-    <div id="content" style="display: none;">
+
+    <div id="content" style="display: none">
       <img src="./images/msg.png" />
       <h1>Welcome to Our Website</h1>
       <p>Click the chat icon in the bottom right to start a conversation.</p>
@@ -92,10 +94,10 @@
     <script>
       // Show content and hide loader
       function showContent() {
-        const loader = document.getElementById('page-loader');
-        const content = document.getElementById('content');
-        if (loader) loader.style.display = 'none';
-        if (content) content.style.display = 'block';
+        const loader = document.getElementById("page-loader");
+        const content = document.getElementById("content");
+        if (loader) loader.style.display = "none";
+        if (content) content.style.display = "block";
       }
       document.addEventListener("DOMContentLoaded", function () {
         console.log("DOM fully loaded, starting Freshchat widget check...");
@@ -109,52 +111,59 @@
           try {
             // Try multiple selectors in case the class names change
             const selectors = [
-              '.d-hotline.h-btn.animated.zoomIn.faster.eager-load', // Original selector
-              'chat-icon', // Common chat icon class
-              '.fc-button', // Freshchat button class
+              ".d-hotline.h-btn.animated.zoomIn.faster.eager-load", // Original selector
+              "chat-icon", // Common chat icon class
+              ".fc-button", // Freshchat button class
               '[aria-label*="chat" i]', // Any element with 'chat' in aria-label (case insensitive)
-              'button',    // Try any button as last resort
-              'a'          // Try any link as last resort
+              "button", // Try any button as last resort
+              "a", // Try any link as last resort
             ];
 
             for (const selector of selectors) {
               try {
                 const elements = document.querySelectorAll(selector);
-                console.log(`Trying selector "${selector}", found ${elements.length} elements`);
-                
+                console.log(
+                  `Trying selector "${selector}", found ${elements.length} elements`
+                );
+
                 for (const el of elements) {
                   // Check if element is visible and likely a chat button
                   const style = window.getComputedStyle(el);
-                  const isVisible = style && 
-                                  style.display !== 'none' && 
-                                  style.visibility !== 'hidden' && 
-                                  style.opacity !== '0' &&
-                                  el.offsetWidth > 0 && 
-                                  el.offsetHeight > 0;
-                  
+                  const isVisible =
+                    style &&
+                    style.display !== "none" &&
+                    style.visibility !== "hidden" &&
+                    style.opacity !== "0" &&
+                    el.offsetWidth > 0 &&
+                    el.offsetHeight > 0;
+
                   if (isVisible) {
-                    console.log('Clicking element:', el);
-                    
+                    console.log("Clicking element:", el);
+
                     // Create and dispatch a click event with more properties
-                    const clickEvent = new MouseEvent('click', {
+                    const clickEvent = new MouseEvent("click", {
                       view: window,
                       bubbles: true,
                       cancelable: true,
-                      composed: true
+                      composed: true,
                     });
-                    
+
                     // Try both direct click and event dispatch
-                    if (typeof el.click === 'function') {
+                    if (typeof el.click === "function") {
                       el.click();
                     } else {
                       el.dispatchEvent(clickEvent);
                     }
-                    
+
                     // Also try focus and mousedown/up events for good measure
                     el.focus();
-                    el.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
-                    el.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
-                    
+                    el.dispatchEvent(
+                      new MouseEvent("mousedown", { bubbles: true })
+                    );
+                    el.dispatchEvent(
+                      new MouseEvent("mouseup", { bubbles: true })
+                    );
+
                     return true;
                   }
                 }
@@ -162,32 +171,31 @@
                 console.warn(`Error with selector "${selector}":`, e);
               }
             }
-            
+
             // If we get here, no elements were clicked
-            console.log('No clickable chat button found with any selector');
+            console.log("No clickable chat button found with any selector");
             return false;
-            
           } catch (e) {
-            console.error('Error in clickChatButton:', e);
+            console.error("Error in clickChatButton:", e);
             return false;
           }
         }
-        
+
         // Hide loader when chat is ready
         function chatIsReady() {
-          console.log('Chat is ready, hiding loader...');
-          const loader = document.getElementById('page-loader');
+          console.log("Chat is ready, hiding loader...");
+          const loader = document.getElementById("page-loader");
           if (loader) {
-            loader.style.opacity = '0';
+            loader.style.opacity = "0";
             setTimeout(() => {
-              loader.style.display = 'none';
+              loader.style.display = "none";
             }, 500); // Match this with the CSS transition time
           }
-          
+
           // Show the main content
-          const content = document.getElementById('content');
-          if (content) content.style.display = 'block';
-          
+          const content = document.getElementById("content");
+          if (content) content.style.display = "block";
+
           return true;
         }
 
@@ -201,13 +209,13 @@
             chatIsReady();
             return true;
           }
-          
+
           // Also try to find and click the chat button
           if (clickChatButton()) {
             chatIsReady();
             return true;
           }
-          
+
           return false;
         }
 
@@ -225,7 +233,9 @@
           }
 
           attempts++;
-          console.log(`Checking for chat button (attempt ${attempts}/${MAX_ATTEMPTS})...`);
+          console.log(
+            `Checking for chat button (attempt ${attempts}/${MAX_ATTEMPTS})...`
+          );
 
           if (checkForWidget() || attempts >= MAX_ATTEMPTS) {
             clearInterval(intervalId);
@@ -233,7 +243,9 @@
             console.log("Stopped checking for chat button");
 
             if (attempts >= MAX_ATTEMPTS) {
-              console.warn("Reached maximum number of attempts. The chat button might not be available.");
+              console.warn(
+                "Reached maximum number of attempts. The chat button might not be available."
+              );
             }
           }
         }, CHECK_INTERVAL);
